@@ -33,12 +33,11 @@ import Prelude
 import Control.Applicative (Applicative(..), (<$>))
 import Control.Monad
 import Data.Monoid (Monoid(..))
-import MM.Data.Sequence.Finger (Seq, empty, singleton, (<|), (|>), fromList,
-      ViewL(..), ViewR(..), viewl, viewr)
+import Data.Sequence
+  (Seq, empty, singleton, (<|), (|>), fromList, ViewL(..), ViewR(..),
+  viewl, viewr)
 import Data.Foldable (Foldable(foldMap), toList)
 import Data.Traversable (Traversable(traverse))
-
-
 import Data.Binary
 
 -----------------------------------------------------------------------------

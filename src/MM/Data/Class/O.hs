@@ -14,14 +14,14 @@ import MM.Data.Map.Ord(Map)
 import MM.Data.Set.Ord(Set)
 import MM.Data.Map.Int(IntMap)
 import MM.Data.Set.Int(IntSet)
-import MM.Data.Ix.Map(IxMap)
-import MM.Data.Ix.Set(IxSet)
+import MM.Data.Map.Ix(IxMap)
+import MM.Data.Set.Ix(IxSet)
 import qualified MM.Data.Map.Ord as M
 import qualified MM.Data.Set.Ord as S
 import qualified MM.Data.Map.Int as IM
 import qualified MM.Data.Set.Int as IS
-import qualified MM.Data.Ix.Map as Ix
-import qualified MM.Data.Ix.Set as IxS
+import qualified MM.Data.Map.Ix as Ix
+import qualified MM.Data.Set.Ix as IxS
 import Data.Monoid(Monoid(..))
 import Data.List hiding((\\))
 import MM.Data.Class.Lattice

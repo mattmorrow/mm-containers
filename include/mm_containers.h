@@ -1,18 +1,18 @@
 #ifndef _MM_CONTAINERS_H
 
 #define IMPORT_MM_CONTAINERS_IX\
-  import MM.Data.Ix.Types;\
-  import MM.Data.Ix.Map(IxMap,Index,Rename,Trans);\
-  import MM.Data.Ix.Set(IxSet);\
-  import MM.Data.Ix.Trie(IxTrie);\
-  import qualified MM.Data.Ix.Map as Ix;\
-  import qualified MM.Data.Ix.Set as IxS;\
-  import qualified MM.Data.Ix.Set as IxT;
+  import MM.Data.Types.Ix.Types;\
+  import MM.Data.Map.Ix(IxMap,Index,Rename,Trans);\
+  import MM.Data.Set.Ix(IxSet);\
+  import MM.Data.Trie.Ix(IxTrie);\
+  import qualified MM.Data.Map.Ix as Ix;\
+  import qualified MM.Data.Set.Ix as IxS;\
+  import qualified MM.Data.Set.Ix as IxT;
 
 #define IMPORT_MM_CONTAINERS_UF\
-  import MM.Data.Quotient.UF(UF);\
-  import qualified MM.Data.Quotient.UF as UF;\
-  import qualified MM.Data.Class.UF as U;
+  import MM.Data.UnionFind.Ix(UF);\
+  import qualified MM.Data.UnionFind.Ix as UF;\
+  import qualified MM.Data.Class.UnionFind as U;
 
 #define IMPORT_MM_CONTAINERS_INTMAPSET\
   import MM.Data.Map.Int(IntMap);\

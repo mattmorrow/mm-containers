@@ -1,6 +1,6 @@
 {-# LANGUAGE CPP #-}
 
-module MM.Data.Quotient.UF (
+module MM.Data.UnionFind.Ix (
    UF,U,newU
 
    ,joinWith
@@ -23,20 +23,20 @@ module MM.Data.Quotient.UF (
 ) where
 
 import Prelude hiding (lookup)
-import MM.Data.Ix.Types
-import MM.Data.Ix.Map(IxMap,Index)
-import MM.Data.Ix.Set(IxSet)
-import qualified MM.Data.Ix.Map as Ix
-import qualified MM.Data.Ix.Set as IxS
+import MM.Data.Types.Ix
+import MM.Data.Map.Ix(IxMap,Index)
+import MM.Data.Set.Ix(IxSet)
+import qualified MM.Data.Map.Ix as Ix
+import qualified MM.Data.Set.Ix as IxS
 import Data.Monoid(Monoid(..))
 import Data.List(foldl')
-import qualified MM.Data.Class.UF as UF
+import qualified MM.Data.Class.UnionFind as UF
 import MM.Data.Class.Empty(Empty(..))
 import MM.Data.Class.Lattice(Join(..))
 import Unsafe.Coerce
 
 -- import qualified MM.Control.Monad.S.U as S
--- import MM.Data.Class.UF(UFM(..))
+-- import MM.Data.Class.UnionFind(UFM(..))
 import Control.Monad(ap)
 
 import qualified Data.Binary as Bin
@@ -74,7 +74,8 @@ ind :: UF a b -> Ix a -> Ix a -> UF a b
 ind uf@(UF o) from to
   | Just{} <- Ix.lookup from o
   = unionToLeft_ uf to from
-  | (# to,r,b,UF o #) <- findR uf to
+  | (# to,r,b,uf #) <- findR uf to
+  , UF o <- uf
   , !o <- case r < 1 of
             True-> Ix.insert to (NODE 1 b) o
             False-> o
@@ -171,7 +172,8 @@ insert uf@(UF o) i new =
       | n <- newU new -> UF (Ix.insert i n o)
     Just (NODE r _)-> UF (Ix.insert i (NODE r new) o)
     Just (IND{})
-      | (# i,r,_,UF o #) <- findR uf i
+      | (# i,r,_,uf #) <- findR uf i
+      , UF o <- uf
       -> UF (Ix.insert i (NODE r new) o)
 
 insertWith :: (b -> b -> b) -> UF a b -> Ix a -> b -> UF a b
@@ -183,7 +185,8 @@ insertWith f uf@(UF o) i new =
       | b <- f new old
       -> UF (Ix.insert i (NODE r b) o)
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       , b <- f new old
       -> UF (Ix.insert i (NODE r b) o)
 
@@ -196,7 +199,8 @@ insertWithRep f uf@(UF o) i new =
       | b <- f i new old
       -> UF (Ix.insert i (NODE r b) o)
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       , b <- f i new old
       -> UF (Ix.insert i (NODE r b) o)
 
@@ -212,7 +216,8 @@ insertWithM f uf@(UF o) i new =
       let !uf2 = UF (Ix.insert i (NODE r b) o)
       return uf2
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       -> do b <- f new old
             let !uf2 = UF (Ix.insert i (NODE r b) o)
             return uf2
@@ -229,33 +234,38 @@ insertWithRepM f uf@(UF o) i new =
       let !uf2 = UF (Ix.insert i (NODE r b) o)
       return uf2
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       -> do b <- f i new old
             let !uf2 = UF (Ix.insert i (NODE r b) o)
             return uf2
 
 update :: (b -> b) -> UF a b -> Ix a -> UF a b
 update f uf i
-  | (# i,r,b,UF o #) <- findR uf i
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf
   , b <- f b
   = UF (Ix.insert i (NODE r b) o)
 
 updateWithRep :: (Ix a -> b -> b) -> UF a b -> Ix a -> UF a b
 updateWithRep f uf i
-  | (# i,r,b,UF o #) <- findR uf i
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf
   , b <- f i b
   = UF (Ix.insert i (NODE r b) o)
 
 updateM :: (Monad m) => (b -> m b) -> UF a b -> Ix a -> m (UF a b)
 updateM f uf i
-  | (# i,r,b,UF o #) <- findR uf i = do
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf = do
       b <- f b
       let !uf2 = UF (Ix.insert i (NODE r b) o)
       return uf2
 
 updateWithRepM :: (Monad m) => (Ix a -> b -> m b) -> UF a b -> Ix a -> m (UF a b)
 updateWithRepM f uf i
-  | (# i,r,b,UF o #) <- findR uf i = do
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf = do
       b <- f i b
       let !uf2 = UF (Ix.insert i (NODE r b) o)
       return uf2
@@ -997,7 +1007,8 @@ joinWith op (UF f) uf
   , !new <- Ix.foldWithKey two new rn = new
   where
         one i (NODE _ b2) new
-          | (# i,r,b1,UF o #) <- findR new i
+          | (# i,r,b1,uf #) <- findR new i
+          , UF o <- uf
           , !b <- op b1 b2
           , !node <- NODE r b
           , !o <- Ix.insert i node o
@@ -1006,7 +1017,8 @@ joinWith op (UF f) uf
         two i j new
           | (# Just i,new #) <- tryRep new i
           = union_ new i j
-          | (# j,r,b,UF o #) <- findR new j
+          | (# j,r,b,uf #) <- findR new j
+          , UF o <- uf
           , !o <- case r < 1 of
                     True-> Ix.insert j (NODE 1 b) o
                     False-> o

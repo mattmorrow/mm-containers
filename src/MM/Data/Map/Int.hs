@@ -39,7 +39,6 @@ import Data.Maybe (fromMaybe)
 import Control.Applicative (Applicative(pure, (<*>)), (<$>))
 import Control.Monad (liftM)
 import Text.Read hiding (get)
-import MM.Data.Num.Low(shiftRL)
 import Data.Word
 import Unsafe.Coerce(unsafeCoerce)
 
@@ -134,12 +133,12 @@ intFromNat w = fromIntegral w
 -----------------------------------------------------------------------------
 
 data IntMap b
-  = Nil
-  | Tip !Int b
-  | Bin !Prefix
+  = Bin !Prefix
         !Mask
         !(IntMap b)
         !(IntMap b)
+  | Tip !Int b
+  | Nil
 
 empty :: IntMap b
 empty = Nil
@@ -208,13 +207,13 @@ branchMask p1 p2
 
 highestBitMask :: Nat -> Nat
 highestBitMask x
-  | !x <- x .|. shiftRL x 1
-  , !x <- x .|. shiftRL x 2
-  , !x <- x .|. shiftRL x 4
-  , !x <- x .|. shiftRL x 8
-  , !x <- x .|. shiftRL x 16
-  , !x <- x .|. shiftRL x 32
-  = x `xor` shiftRL x 1
+  | !x <- x .|. shiftR x 1
+  , !x <- x .|. shiftR x 2
+  , !x <- x .|. shiftR x 4
+  , !x <- x .|. shiftR x 8
+  , !x <- x .|. shiftR x 16
+  , !x <- x .|. shiftR x 32
+  = x `xor` shiftR x 1
 
 -----------------------------------------------------------------------------
 

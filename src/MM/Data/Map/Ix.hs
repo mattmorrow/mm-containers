@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns, NoMonomorphismRestriction #-}
 
-module MM.Data.Ix.Map (
+module MM.Data.Map.Ix (
    IxMap,MapIx,Index,Trans,Rename
   ,castIxMap
   ,castIxMapArgToIntMap
@@ -37,7 +37,7 @@ module MM.Data.Ix.Map (
 
 ) where
 
-import MM.Data.Ix.Types
+import MM.Data.Types.Ix
 import Prelude hiding
   (lookup,map,filter,foldr,foldl,null,mapM,mapM_)
 import Unsafe.Coerce(unsafeCoerce)

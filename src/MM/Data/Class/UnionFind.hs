@@ -1,6 +1,6 @@
 {-# LANGUAGE CPP #-}
 
-module MM.Data.Class.UF (
+module MM.Data.Class.UnionFind (
    NewM(..)
   ,GetM(..),SetM(..),AddM(..)
   ,GetSetM(..),GetSetAddM(..)
@@ -8,9 +8,9 @@ module MM.Data.Class.UF (
   ,UFM(..),UF(..)
 ) where
 
-import MM.Data.Ix.Types
-import MM.Data.Ix.Map(IxMap,Index)
-import MM.Data.Ix.Set(IxSet)
+import MM.Data.Types.Ix
+import MM.Data.Map.Ix(IxMap,Index)
+import MM.Data.Set.Ix(IxSet)
 import Data.Monoid(Monoid(..))
 
 -----------------------------------------------------------------------------

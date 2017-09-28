@@ -1,0 +1,75 @@
+name:                 mm-containers
+version:              0.1
+cabal-version:        >=1.6
+build-type:           Simple
+license:              BSD3
+license-file:         LICENSE
+author:               Matthew Morrow
+maintainer:           Matthew Morrow <mjm2002@gmail.com>
+copyright:            (c) 2009-2017 Matthew Morrow
+homepage:             https://github.com/mattmorrow/mm-containers#readme
+category:             Data, Data Structures
+-- synopsis:
+-- description:
+extra-source-files:   README.md,
+                      include/mm_containers.h,
+                      include/mm_containers_compat.h
+source-repository head
+  type:     git
+  location: https://github.com/mattmorrow/mm-containers
+library
+  build-depends:      base >= 4 && < 5,
+                      containers,
+                      binary
+
+  ghc-options:        -O2 -funbox-strict-fields
+  ghc-prof-options:
+  cc-options:
+  hs-source-dirs:     src
+  include-dirs:       include
+  c-sources:
+  extra-libraries:
+  Extensions:
+                      CPP,
+                      BangPatterns,
+                      PatternGuards,
+                      UnboxedTuples,
+                      MultiParamTypeClasses,
+                      TypeSynonymInstances,
+                      FlexibleInstances,
+                      EmptyDataDecls,
+                      FunctionalDependencies
+                      RecordWildCards,
+                      NamedFieldPuns,
+                      StandaloneDeriving,
+                      ScopedTypeVariables,
+                      UndecidableInstances
+
+  other-modules:
+  exposed-modules:
+                      MM.Data.Class.O
+                      MM.Data.Class.Empty
+                      MM.Data.Class.Map
+                      MM.Data.Class.Lattice
+                      MM.Data.Class.UnionFind
+                      MM.Data.Class.List
+
+                      MM.Data.Types.Ix
+
+                      MM.Data.Map.Ord
+                      MM.Data.Map.Int
+                      MM.Data.Map.Ix
+
+                      MM.Data.Set.Ord
+                      MM.Data.Set.Int
+                      MM.Data.Set.Ix
+
+                      MM.Data.Trie.Ord
+                      MM.Data.Trie.Int
+                      MM.Data.Trie.Ix
+
+                      MM.Data.UnionFind.Int
+                      MM.Data.UnionFind.Ix
+
+                      MM.Data.Tree.Rose
+

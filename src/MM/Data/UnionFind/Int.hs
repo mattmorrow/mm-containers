@@ -7,7 +7,7 @@
 #define __D deriving(Eq,Ord,Read,Show)
 #define __D_BE deriving(Eq,Ord,Read,Show,Bounded,Enum)
 
-module MM.Language.SPIRV.Util.UnionFind (
+module MM.Data.UnionFind.Int (
    UF,U,newU
   ,joinWith
   ,ppUF,ppUFAlt,ppU,statsMaxIndChain
@@ -32,14 +32,14 @@ import qualified Prelude as P
 import Data.Int
 import Data.Word
 import Data.Bits
-import Data.Map(Map)
-import Data.Set(Set)
-import Data.IntMap(IntMap)
-import Data.IntSet(IntSet)
-import qualified Data.Map as M
-import qualified Data.Set as S
-import qualified Data.IntMap as IM
-import qualified Data.IntSet as IS
+import MM.Data.Map.Ord(Map)
+import MM.Data.Set.Ord(Set)
+import MM.Data.Map.Int(IntMap)
+import MM.Data.Set.Int(IntSet)
+import qualified MM.Data.Map.Ord as M
+import qualified MM.Data.Set.Ord as S
+import qualified MM.Data.Map.Int as IM
+import qualified MM.Data.Set.Int as IS
 import Data.Monoid(Monoid(..))
 import Control.Applicative(Applicative(..))
 import Data.Function
@@ -123,7 +123,8 @@ ind :: __UF(a) b -> __KEY(a) -> __KEY(a) -> __UF(a) b
 ind uf@(UF o) from to
   | Just{} <- __KMAPPRE(lookup) from o
   = unionToLeft_ uf to from
-  | (# to,r,b,UF o #) <- findR uf to
+  | (# to,r,b,uf #) <- findR uf to
+  , UF o <- uf
   , !o <- case r < 1 of
             True-> __KMAPPRE(insert) to (NODE 1 b) o
             False-> o
@@ -221,7 +222,8 @@ insert uf@(UF o) i new =
       | n <- newU new -> UF (__KMAPPRE(insert) i n o)
     Just (NODE r _)-> UF (__KMAPPRE(insert) i (NODE r new) o)
     Just (IND{})
-      | (# i,r,_,UF o #) <- findR uf i
+      | (# i,r,_,uf #) <- findR uf i
+      , UF o <- uf
       -> UF (__KMAPPRE(insert) i (NODE r new) o)
 
 insertWith :: (b -> b -> b) -> __UF(a) b -> __KEY(a) -> b -> __UF(a) b
@@ -233,7 +235,8 @@ insertWith f uf@(UF o) i new =
       | b <- f new old
       -> UF (__KMAPPRE(insert) i (NODE r b) o)
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       , b <- f new old
       -> UF (__KMAPPRE(insert) i (NODE r b) o)
 
@@ -246,7 +249,8 @@ insertWithRep f uf@(UF o) i new =
       | b <- f i new old
       -> UF (__KMAPPRE(insert) i (NODE r b) o)
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       , b <- f i new old
       -> UF (__KMAPPRE(insert) i (NODE r b) o)
 
@@ -262,7 +266,8 @@ insertWithM f uf@(UF o) i new =
       let !uf2 = UF (__KMAPPRE(insert) i (NODE r b) o)
       return uf2
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       -> do b <- f new old
             let !uf2 = UF (__KMAPPRE(insert) i (NODE r b) o)
             return uf2
@@ -279,33 +284,38 @@ insertWithRepM f uf@(UF o) i new =
       let !uf2 = UF (__KMAPPRE(insert) i (NODE r b) o)
       return uf2
     Just (IND{})
-      | (# i,r,old,UF o #) <- findR uf i
+      | (# i,r,old,uf #) <- findR uf i
+      , UF o <- uf
       -> do b <- f i new old
             let !uf2 = UF (__KMAPPRE(insert) i (NODE r b) o)
             return uf2
 
 update :: (b -> b) -> __UF(a) b -> __KEY(a) -> __UF(a) b
 update f uf i
-  | (# i,r,b,UF o #) <- findR uf i
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf
   , b <- f b
   = UF (__KMAPPRE(insert) i (NODE r b) o)
 
 updateWithRep :: (__KEY(a) -> b -> b) -> __UF(a) b -> __KEY(a) -> __UF(a) b
 updateWithRep f uf i
-  | (# i,r,b,UF o #) <- findR uf i
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf
   , b <- f i b
   = UF (__KMAPPRE(insert) i (NODE r b) o)
 
 updateM :: (Monad m) => (b -> m b) -> __UF(a) b -> __KEY(a) -> m (__UF(a) b)
 updateM f uf i
-  | (# i,r,b,UF o #) <- findR uf i = do
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf = do
       b <- f b
       let !uf2 = UF (__KMAPPRE(insert) i (NODE r b) o)
       return uf2
 
 updateWithRepM :: (Monad m) => (__KEY(a) -> b -> m b) -> __UF(a) b -> __KEY(a) -> m (__UF(a) b)
 updateWithRepM f uf i
-  | (# i,r,b,UF o #) <- findR uf i = do
+  | (# i,r,b,uf #) <- findR uf i
+  , UF o <- uf = do
       b <- f i b
       let !uf2 = UF (__KMAPPRE(insert) i (NODE r b) o)
       return uf2
@@ -1045,7 +1055,8 @@ joinWith op (UF f) uf
   , !new <- __KMAPPRE(foldWithKey) two new rn = new
   where
         one i (NODE _ b2) new
-          | (# i,r,b1,UF o #) <- findR new i
+          | (# i,r,b1,uf #) <- findR new i
+          , UF o <- uf
           , !b <- op b1 b2
           , !node <- NODE r b
           , !o <- __KMAPPRE(insert) i node o
@@ -1054,7 +1065,8 @@ joinWith op (UF f) uf
         two i j new
           | (# Just i,new #) <- tryRep new i
           = union_ new i j
-          | (# j,r,b,UF o #) <- findR new j
+          | (# j,r,b,uf #) <- findR new j
+          , UF o <- uf
           , !o <- case r < 1 of
                     True-> __KMAPPRE(insert) j (NODE 1 b) o
                     False-> o

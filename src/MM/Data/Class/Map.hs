@@ -3,11 +3,11 @@ module MM.Data.Class.Map where
 
 import MM.Data.Class.List
 
-import MM.Data.Ix.Types
-import MM.Data.Ix.Map
+import MM.Data.Types.Ix
+import MM.Data.Map.Ix
   (IxMap,Index,Trans,Rename)
-import MM.Data.Ix.Set(IxSet)
-import MM.Data.Ix.Trie(IxTrie)
+import MM.Data.Set.Ix(IxSet)
+import MM.Data.Trie.Ix(IxTrie)
 import MM.Data.Map.Ord(Map)
 import MM.Data.Set.Ord(Set)
 import MM.Data.Map.Int(IntMap)
@@ -16,12 +16,11 @@ import qualified MM.Data.Map.Ord as M
 import qualified MM.Data.Set.Ord as S
 import qualified MM.Data.Map.Int as IM
 import qualified MM.Data.Set.Int as IS
-import MM.Data.Quotient.UF(UF(..))
-import qualified MM.Data.Quotient.UF as UF
-import qualified MM.Data.Quotient.UF.Alt2 as UF2
-import qualified MM.Data.Ix.Map as Ix
-import qualified MM.Data.Ix.Set as IxS
-import qualified MM.Data.Ix.Trie as IxT
+import MM.Data.UnionFind.Ix(UF(..))
+import qualified MM.Data.UnionFind.Ix as UF
+import qualified MM.Data.Map.Ix as Ix
+import qualified MM.Data.Set.Ix as IxS
+import qualified MM.Data.Trie.Ix as IxT
 import Data.Monoid(mempty)
 import Data.List(foldl')
 
@@ -226,11 +225,8 @@ instance (Ord a) => Codom (Map a (IxSet b)) (IxSet b) where codom f = IxS.unions
 
 instance Dom (UF a b) [Ix a] where dom = UF.keys
 instance Dom (UF a b) (IxSet a) where dom = fromList . UF.keys
-instance Dom (UF2.UF a b) [Ix a] where dom = UF2.keys
-instance Dom (UF2.UF a b) (IxSet a) where dom = fromList . UF2.keys
 
 instance Codom (UF a b) [b] where codom = UF.elems
 instance (Ord b) => Codom (UF a b) (Set b) where codom = fromList . UF.elems
-instance (Ord b) => Codom (UF2.UF a b) (Set b) where codom = fromList . UF2.elems
 
 -----------------------------------------------------------------------------

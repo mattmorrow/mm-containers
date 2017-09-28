@@ -35,7 +35,6 @@ import Data.Monoid (Monoid(..))
 import Data.Maybe (fromMaybe)
 import Control.Applicative((<$>),(<*>))
 import Text.Read hiding(get)
-import MM.Data.Num.Low(shiftRL)
 import Data.Word
 
 -----------------------------------------------------------------------------
@@ -81,9 +80,9 @@ natFromInt i = fromIntegral i
 intFromNat :: Nat -> Int
 intFromNat w = fromIntegral w
 
-data IntSet = Nil
+data IntSet = Binary {-# UNPACK #-} !Prefix {-# UNPACK #-} !Mask !IntSet !IntSet
             | Tip {-# UNPACK #-} !Int
-            | Binary {-# UNPACK #-} !Prefix {-# UNPACK #-} !Mask !IntSet !IntSet
+            | Nil
 -- Invariant: Nil is never found as a child of Binary.
 -- Invariant: The Mask is a power of 2.  It is the largest bit position at which
 --            two elements of the set differ.
@@ -177,13 +176,13 @@ branchMask p1 p2
 -- highest bit and than taking an exclusive or with the original value.
 highestBitMask :: Nat -> Nat
 highestBitMask x
-  | !x <- x .|. shiftRL x 1
-  , !x <- x .|. shiftRL x 2
-  , !x <- x .|. shiftRL x 4
-  , !x <- x .|. shiftRL x 8
-  , !x <- x .|. shiftRL x 16
-  , !x <- x .|. shiftRL x 32
-  = x `xor` shiftRL x 1
+  | !x <- x .|. shiftR x 1
+  , !x <- x .|. shiftR x 2
+  , !x <- x .|. shiftR x 4
+  , !x <- x .|. shiftR x 8
+  , !x <- x .|. shiftR x 16
+  , !x <- x .|. shiftR x 32
+  = x `xor` shiftR x 1
 
 -----------------------------------------------------------------------------
 

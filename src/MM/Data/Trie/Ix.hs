@@ -1,5 +1,5 @@
 
-module MM.Data.Ix.Trie (
+module MM.Data.Trie.Ix (
    IxTrie,TrieIx
   ,empty,null,insert,lookup
   ,fromList,toList,toTree
@@ -10,9 +10,9 @@ import MM.Data.Map.Ord(Map)
 import MM.Data.Map.Int(IntMap)
 import qualified MM.Data.Map.Ord as M
 import qualified MM.Data.Map.Int as IM
-import MM.Data.Ix.Map(IxMap)
-import MM.Data.Ix.Types(Ix(..),unIx)
-import qualified MM.Data.Ix.Map as Ix
+import MM.Data.Map.Ix(IxMap)
+import MM.Data.Types.Ix(Ix(..),unIx)
+import qualified MM.Data.Map.Ix as Ix
 import Data.Monoid(Monoid(..))
 import Data.List(foldl')
 import Control.Applicative(Applicative(..))

@@ -10,17 +10,15 @@ import MM.Data.Map.Ord(Map)
 import MM.Data.Set.Ord(Set)
 import MM.Data.Map.Int(IntMap)
 import MM.Data.Set.Int(IntSet)
-import MM.Data.Ix.Map(IxMap)
-import MM.Data.Ix.Set(IxSet)
-import MM.Data.Ix.Types(Ix(..),unIx)
+import MM.Data.Map.Ix(IxMap)
+import MM.Data.Set.Ix(IxSet)
+import MM.Data.Types.Ix(Ix(..),unIx)
 import qualified MM.Data.Map.Ord as M
 import qualified MM.Data.Set.Ord as S
 import qualified MM.Data.Map.Int as IM
 import qualified MM.Data.Set.Int as IS
-import qualified MM.Data.Ix.Map as Ix
-import qualified MM.Data.Ix.Set as IxS
-import qualified MM.Data.Map.Int.Strict as SIM
-import qualified MM.Data.Ix.Map.Strict as SIx
+import qualified MM.Data.Map.Ix as Ix
+import qualified MM.Data.Set.Ix as IxS
 
 -----------------------------------------------------------------------------
 
@@ -44,8 +42,6 @@ INSTANCE_LIST(Set a,a,a,Ord a,S.fromList,S.toList)
 INSTANCE_LIST(Map a b,(a,b),(a,b),Ord a,M.fromList,M.toList)
 INSTANCE_LIST(IxMap a b,(Ix a,b),(Ix a,b),,Ix.fromList,Ix.toList)
 INSTANCE_LIST(IxSet a,Ix a,Ix a,,IxS.fromList,IxS.toList)
-INSTANCE_LIST(SIM.IntMap a,(Int,a),(Int,a),,SIM.fromList,SIM.toList)
-INSTANCE_LIST(SIx.IxMap a b,(Ix a,b),(Ix a,b),,SIx.fromList,SIx.toList)
 #undef INSTANCE_LIST
 
 -----------------------------------------------------------------------------

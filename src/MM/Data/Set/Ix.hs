@@ -1,7 +1,7 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
 
-module MM.Data.Ix.Set (
+module MM.Data.Set.Ix (
    IxSet,SetIx
   ,castIxSet
   ,castIxSetArgToIntSet
@@ -19,7 +19,7 @@ module MM.Data.Ix.Set (
   ,fromDistinctAscList
 ) where
 
-import MM.Data.Ix.Types
+import MM.Data.Types.Ix
 import Prelude hiding
   (lookup,filter,foldr,foldl,null,map,mapM_)
 import MM.Data.Set.Int(IntSet)

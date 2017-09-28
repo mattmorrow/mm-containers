@@ -2,11 +2,14 @@
 #include "mm_containers_compat.h"
 #define __D deriving(Eq,Ord,Read,Show)
 
-module MM.Data.Ix (
-   Ix(..), unIx, castIx
+module MM.Data.Types.Ix (
+   Ix(..), unIx
+  ,castIx, castIxArg, castIxArg2, castIntToIxArg
 ) where
 
 import Data.Bits
+import Unsafe.Coerce(unsafeCoerce)
+import Data.Binary
 
 -- | A newtype of @Int@ with a phantom type variable.
 newtype Ix a = Ix Int __D
@@ -16,6 +19,21 @@ unIx (Ix i) = i
 
 castIx :: Ix a -> Ix b
 castIx (Ix i) = Ix i
+
+castIxArg :: f (Ix a) -> f (Ix b)
+castIxArg = unsafeCoerce
+
+castIxArg2 :: f (Ix a) b -> f (Ix c) b
+castIxArg2 = unsafeCoerce
+
+castIntToIxArg :: f Int -> f (Ix a)
+castIntToIxArg = unsafeCoerce
+
+instance Binary (Ix a) where
+  put = put . unIx
+  get = do
+    a <- get
+    return (Ix a)
 
 instance Enum (Ix a) where
   toEnum = Ix
