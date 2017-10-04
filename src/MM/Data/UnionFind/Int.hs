@@ -47,9 +47,8 @@ import Data.List(foldl')
 import Control.Monad hiding(foldM)
 import Unsafe.Coerce
 import qualified Data.Binary as Bin
-import qualified MM.Data.Class.UnionFind as UF
-import MM.Data.Class.Empty(Empty(..))
-import MM.Data.Class.Lattice(Join(..))
+import qualified MM.Data.Class.UnionFind.Int as UF
+import MM.Data.Class.Base(Empty(..),Join(..))
 
 -----------------------------------------------------------------------------
 -----------------------------------------------------------------------------

@@ -30,9 +30,8 @@ import qualified MM.Data.Map.Ix as Ix
 import qualified MM.Data.Set.Ix as IxS
 import Data.Monoid(Monoid(..))
 import Data.List(foldl')
-import qualified MM.Data.Class.UnionFind as UF
-import MM.Data.Class.Empty(Empty(..))
-import MM.Data.Class.Lattice(Join(..))
+import qualified MM.Data.Class.UnionFind.Ix as UF
+import MM.Data.Class.Base(Empty(..),Join(..))
 import Unsafe.Coerce
 
 -- import qualified MM.Control.Monad.S.U as S
@@ -912,7 +911,6 @@ quotientAndReindexFrom' n o
   , g       <- Ix.castIxMap g
   = (n,f,g)
 
-
 -- | Identical to @collect@, except an
 --  @IxMap a b@ is returned instead of a @UF a b@.
 quotient :: UF a b -> (IxMap a (Ix a), IxMap a b)
@@ -960,7 +958,6 @@ quotient_ uf@(UF o) = go mempty mempty uf mempty (Ix.keys o)
                 , !ix   <- Ix.insert i j ix
                 , !seen <- j`IxS.insert`seen
                 -> go new seen uf ix is
-
 
 -- | Identical to @collectAndReindexFrom@,
 --  except an @IxMap a b@ is returned instead of a @UF a b@.
@@ -1032,7 +1029,6 @@ getInds uf _ = mempty
 
 setInds :: UF a b -> Ix a -> IxSet a -> UF a b
 setInds uf _ _ = uf
-
 
 getAndClearInds :: UF a b -> Ix a -> (# IxSet a, UF a b #)
 getAndClearInds uf i

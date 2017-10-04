@@ -1,17 +1,16 @@
 {-# LANGUAGE CPP #-}
 
-module MM.Data.Class.UnionFind (
-   NewM(..)
-  ,GetM(..),SetM(..),AddM(..)
-  ,GetSetM(..),GetSetAddM(..)
+module MM.Data.Class.UnionFind.Ix (
+   UF(..)
   ,RepM(..)
-  ,UFM(..),UF(..)
+  ,UFM(..)
 ) where
 
 import MM.Data.Types.Ix
 import MM.Data.Map.Ix(IxMap,Index)
 import MM.Data.Set.Ix(IxSet)
 import Data.Monoid(Monoid(..))
+import MM.Data.Class.Maps(GetSetAddM)
 
 -----------------------------------------------------------------------------
 
@@ -27,38 +26,6 @@ class (Monad m) => AntiUnifyM m a where
   antiUnifyM_ :: Ix a -> Ix a -> m ()
   antiUnifyM_ i j = antiUnifyM i j >> return ()
 #endif
-
------------------------------------------------------------------------------
-
--- | .
-class (Monad m) => NewM m a where
-  newM :: m (Ix a)
-
------------------------------------------------------------------------------
-
-class (Monad m) => GetM m a b where
-  getM :: Ix a -> m b
-
-class (Monad m) => SetM m a b where
-  setM :: Ix a -> b -> m ()
-  unsafeSetM :: Ix a -> b -> m ()
-  unsafeSetM = setM
-
-class (NewM m a, SetM m a b) => AddM m a b where
-  addM :: b -> m (Ix a)
-  addM b = do
-    i <- newM
-    setM i b
-    return i
-
-class (GetM m a b
-      ,SetM m a b)
-  => GetSetM m a b
-
-class (GetM m a b
-      ,SetM m a b
-      ,AddM m a b)
-  => GetSetAddM m a b
 
 -----------------------------------------------------------------------------
 
@@ -138,7 +105,7 @@ class (Monad m) => OutOfDateM m a where
 -----------------------------------------------------------------------------
 
 -- class (FindM m a b, GetSetAddM m a b) => UFM m a b | m a -> b where
-class (RepM m a, GetSetAddM m a b) => UFM m a b | m a -> b where
+class (RepM m a, GetSetAddM m (Ix a) b) => UFM m a b | m a -> b where
   findM :: Ix a -> m (Ix a, b)
   tryFindM :: Ix a -> m (Maybe (Ix a, b))
   indM :: Ix a -> Ix a -> m ()

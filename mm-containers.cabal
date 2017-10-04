@@ -43,16 +43,15 @@ library
                       NamedFieldPuns,
                       StandaloneDeriving,
                       ScopedTypeVariables,
-                      UndecidableInstances
+                      UndecidableInstances,
+                      FlexibleContexts
 
   other-modules:
   exposed-modules:
-                      MM.Data.Class.O
-                      MM.Data.Class.Empty
-                      MM.Data.Class.Map
-                      MM.Data.Class.Lattice
-                      MM.Data.Class.UnionFind
-                      MM.Data.Class.List
+                      MM.Data.Class.Base
+                      MM.Data.Class.Maps
+                      MM.Data.Class.UnionFind.Ix
+                      MM.Data.Class.UnionFind.Int
 
                       MM.Data.Types.Ix
 
