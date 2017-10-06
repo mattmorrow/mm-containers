@@ -39,15 +39,11 @@ import Data.Monoid (Monoid(..))
 import Control.Applicative (Applicative(pure, (<*>)), (<$>))
 import Text.Read
 
-
 foldlStrict :: (a -> b -> a) -> a -> [b] -> a
 foldlStrict f z xs
   = case xs of
       [] -> z
       (x : xx) -> let z' = f z x in seq z' (foldlStrict f z' xx)
-
-
-
 
 mapM :: (Monad m) => (a -> m b) -> Map k a -> m (Map k b)
 mapM f = go
@@ -66,16 +62,7 @@ foldWithKeyM f = go
                !z <- f k x z
                go z r
 
-
-
-
-
-
-
-
-
 -----------------------------------------------------------------------------
-
 
 delta, ratio :: Int
 delta = 5
@@ -126,11 +113,9 @@ bin k x l r = Bin (size l + size r + 1) k x l r
 
 -----------------------------------------------------------------------------
 
-
 data Map k a = Bin !Size !k a !(Map k a) !(Map k a) | Tip
 
 type Size = Int
-
 
 instance (Bin.Binary k, Bin.Binary a) => Bin.Binary (Map k a) where
   put (Tip) = Bin.putWord8 0
@@ -146,8 +131,6 @@ instance (Ord k) => Monoid (Map k v) where
   mempty = empty
   mappend = union
   mconcat = unions
-
-
 
 -----------------------------------------------------------------------------
 
@@ -182,13 +165,6 @@ infixl 9 \\
 #endif
 
 -----------------------------------------------------------------------------
-
-
-
-
-
-
-
 
 lookup :: (Ord k) => k -> Map k a -> Maybe a
 lookup k t
@@ -962,8 +938,15 @@ instance (Ord k, Read k, Read e) => Read (Map k e) where
     ,do xs <- readPrec; return (fromList xs)]
   readListPrec = readListPrecDefault
 
+instance (Show k) => Show (Map k ()) where
+  showsPrec _ Tip = showString "mempty"
+  showsPrec _ o   = shows (fmap fst (toList o))
 
-
+instance (Ord k, Read k) => Read (Map k ()) where
+  readPrec = (parens . choice)
+    [do Ident "mempty" <- lexP; return mempty
+    ,do xs <- readPrec; return (fromList (zip xs (repeat ())))]
+  readListPrec = readListPrecDefault
 
 -----------------------------------------------------------------------------
 
@@ -1020,7 +1003,6 @@ withEmpty bars = "   " : bars
 
 valid :: (Ord k) => Map k a -> Bool
 valid t = balanced t && ordered t && validsize t
-
 
 validsize :: Map a b -> Bool
 validsize t = (realsize t == Just (size t))

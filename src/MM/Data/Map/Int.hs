@@ -1236,6 +1236,16 @@ instance (Read b) => Read (IntMap b) where
     ,do xs <- readPrec; return (fromList xs)]
   readListPrec = readListPrecDefault
 
+instance Show (IntMap ()) where
+  showsPrec _ Nil = showString "mempty"
+  showsPrec _ o   = shows (fmap fst (toList o))
+
+instance Read (IntMap ()) where
+  readPrec = (parens . choice)
+    [do Ident "mempty" <- lexP; return mempty
+    ,do xs <- readPrec; return (fromList (zip xs (repeat ())))]
+  readListPrec = readListPrecDefault
+
 -----------------------------------------------------------------------------
 
 showTree :: (Show b) => IntMap b -> String

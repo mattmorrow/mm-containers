@@ -29,6 +29,7 @@ import Data.List hiding((\\),null)
 
 -----------------------------------------------------------------------------
 
+-- | .
 class ToList o a | o -> a where
   toList :: o -> [a]
 class FromList o a | o -> a where

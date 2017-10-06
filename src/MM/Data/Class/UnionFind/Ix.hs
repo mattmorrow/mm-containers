@@ -105,6 +105,8 @@ class (Monad m) => OutOfDateM m a where
 -----------------------------------------------------------------------------
 
 -- class (FindM m a b, GetSetAddM m a b) => UFM m a b | m a -> b where
+
+-- | .
 class (RepM m a, GetSetAddM m (Ix a) b) => UFM m a b | m a -> b where
   findM :: Ix a -> m (Ix a, b)
   tryFindM :: Ix a -> m (Maybe (Ix a, b))

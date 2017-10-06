@@ -53,6 +53,7 @@ instance (Ord b) => Codom (IUF.UF b) (Set b) where codom = fromList . IUF.elems
 
 -----------------------------------------------------------------------------
 
+-- | .
 class Dom map a where
   dom :: map -> a
 class Codom map b where

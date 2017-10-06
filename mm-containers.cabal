@@ -44,7 +44,9 @@ library
                       StandaloneDeriving,
                       ScopedTypeVariables,
                       UndecidableInstances,
-                      FlexibleContexts
+                      OverlappingInstances,
+                      FlexibleContexts,
+                      GeneralizedNewtypeDeriving
 
   other-modules:
   exposed-modules:

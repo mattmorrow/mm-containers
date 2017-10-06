@@ -13,6 +13,7 @@ import MM.Data.Class.Maps(GetSetAddM)
 
 -----------------------------------------------------------------------------
 
+-- | .
 class UF uf b | uf -> b where
   find :: uf -> Int -> (# Int, b, uf #)
   rep  :: uf -> Int -> (# Int,    uf #)
