@@ -30,9 +30,9 @@ import Data.List hiding((\\),null)
 -----------------------------------------------------------------------------
 
 -- | .
-class ToList o a | o -> a where
+class ToList o a where -- o -> a where
   toList :: o -> [a]
-class FromList o a | o -> a where
+class FromList o a where -- o -> a where
   fromList :: [a] -> o
 class (FromList o a,ToList o b) => List o a b | o -> a b
 #define INSTANCE_LIST(A_t,B_t,C_t,CXT,FROMLIST,TOLIST)\
@@ -47,6 +47,18 @@ INSTANCE_LIST(Map a b,(a,b),(a,b),Ord a,M.fromList,M.toList)
 INSTANCE_LIST(IxMap a b,(Ix a,b),(Ix a,b),,Ix.fromList,Ix.toList)
 INSTANCE_LIST(IxSet a,Ix a,Ix a,,IxS.fromList,IxS.toList)
 #undef INSTANCE_LIST
+instance ToList (IxMap a ()) (Ix a) where
+  toList = Ix.keys
+instance ToList (IntMap ()) Int where
+  toList = IM.keys
+instance (Ord a) => ToList (Map a ()) a where
+  toList = M.keys
+instance FromList (IxMap a ()) (Ix a) where
+  fromList xs = Ix.fromList (zip xs (repeat ()))
+instance FromList (IntMap ()) Int where
+  fromList xs = IM.fromList (zip xs (repeat ()))
+instance (Ord a) => FromList (Map a ()) a where
+  fromList xs = M.fromList (zip xs (repeat ()))
 
 -----------------------------------------------------------------------------
 

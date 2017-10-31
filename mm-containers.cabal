@@ -46,7 +46,11 @@ library
                       UndecidableInstances,
                       OverlappingInstances,
                       FlexibleContexts,
-                      GeneralizedNewtypeDeriving
+                      GeneralizedNewtypeDeriving,
+                      -- IncoherentInstances so users of this module
+                      -- are allowed to use IncoherentInstances involving
+                      -- types in this module with the same.
+                      IncoherentInstances
 
   other-modules:
   exposed-modules:
